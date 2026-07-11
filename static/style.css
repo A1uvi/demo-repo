@@ -1,0 +1,78 @@
+body {
+  font-family: system-ui, sans-serif;
+  background: #f7f7f8;
+  margin: 0;
+}
+
+main {
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+}
+
+h1 {
+  text-align: center;
+}
+
+form {
+  display: inline;
+}
+
+main > form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+main > form input[type='text'] {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+main > form button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
+li .title {
+  flex: 1;
+}
+
+li.done .title {
+  text-decoration: line-through;
+  color: #888;
+}
+
+li.empty {
+  color: #888;
+  justify-content: center;
+}
+
+button.toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+button.delete {
+  background: none;
+  border: 1px solid #b00020;
+  color: #b00020;
+  border-radius: 4px;
+  cursor: pointer;
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Todo App</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <h1>Todo List</h1>
+
+    <form action="{{ url_for('add') }}" method="post">
+      <input type="text" name="title" placeholder="What needs doing?" autocomplete="off" required>
+      <button type="submit">Add</button>
+    </form>
+
+    <ul>
+      {% for todo in todos %}
+        <li class="{{ 'done' if todo['is_complete'] else '' }}">
+          <form action="{{ url_for('toggle', todo_id=todo['id']) }}" method="post" class="toggle-form">
+            <button type="submit" class="toggle">
+              {{ '☑' if todo['is_complete'] else '☐' }}
+            </button>
+          </form>
+          <span class="title">{{ todo['title'] }}</span>
+          <form action="{{ url_for('delete', todo_id=todo['id']) }}" method="post">
+            <button type="submit" class="delete">Delete</button>
+          </form>
+        </li>
+      {% else %}
+        <li class="empty">No todos yet — add one above.</li>
+      {% endfor %}
+    </ul>
+  </main>
+</body>
+</html>
