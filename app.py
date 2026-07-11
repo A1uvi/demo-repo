@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import date
 from pathlib import Path
 
 from flask import Flask, g, redirect, render_template, request, url_for
@@ -25,15 +26,20 @@ def close_db(exception):
 
 def init_db():
     with sqlite3.connect(DATABASE) as db:
+        db.row_factory = sqlite3.Row
         db.execute(
             """
             CREATE TABLE IF NOT EXISTS todo (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
-                is_complete INTEGER NOT NULL DEFAULT 0
+                is_complete INTEGER NOT NULL DEFAULT 0,
+                due_date TEXT
             )
             """
         )
+        columns = {row["name"] for row in db.execute("PRAGMA table_info(todo)")}
+        if "due_date" not in columns:
+            db.execute("ALTER TABLE todo ADD COLUMN due_date TEXT")
 
 
 init_db()
@@ -42,16 +48,21 @@ init_db()
 @app.route("/")
 def index():
     db = get_db()
-    todos = db.execute("SELECT * FROM todo ORDER BY id").fetchall()
-    return render_template("index.html", todos=todos)
+    todos = db.execute(
+        "SELECT * FROM todo ORDER BY (due_date IS NULL), due_date, id"
+    ).fetchall()
+    return render_template("index.html", todos=todos, today=date.today().isoformat())
 
 
 @app.route("/add", methods=["POST"])
 def add():
     title = request.form.get("title", "").strip()
+    due_date = request.form.get("due_date", "").strip() or None
     if title:
         db = get_db()
-        db.execute("INSERT INTO todo (title) VALUES (?)", (title,))
+        db.execute(
+            "INSERT INTO todo (title, due_date) VALUES (?, ?)", (title, due_date)
+        )
         db.commit()
     return redirect(url_for("index"))
 
