@@ -51,7 +51,9 @@ def index():
     todos = db.execute(
         "SELECT * FROM todo ORDER BY (due_date IS NULL), due_date, id"
     ).fetchall()
-    return render_template("index.html", todos=todos, today=date.today().isoformat())
+    return render_template(
+        "index.html", todos=todos, today=date.today().isoformat(), editing_id=None
+    )
 
 
 @app.route("/add", methods=["POST"])
@@ -75,6 +77,24 @@ def toggle(todo_id):
     )
     db.commit()
     return redirect(url_for("index"))
+
+
+@app.route("/edit/<int:todo_id>", methods=["GET", "POST"])
+def edit(todo_id):
+    db = get_db()
+    if request.method == "POST":
+        title = request.form.get("title", "").strip()
+        if title:
+            db.execute("UPDATE todo SET title = ? WHERE id = ?", (title, todo_id))
+            db.commit()
+        return redirect(url_for("index"))
+
+    todos = db.execute(
+        "SELECT * FROM todo ORDER BY (due_date IS NULL), due_date, id"
+    ).fetchall()
+    return render_template(
+        "index.html", todos=todos, today=date.today().isoformat(), editing_id=todo_id
+    )
 
 
 @app.route("/delete/<int:todo_id>", methods=["POST"])

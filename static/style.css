@@ -91,3 +91,38 @@ button.delete {
   border-radius: 4px;
   cursor: pointer;
 }
+
+a.edit,
+a.cancel {
+  font-size: 0.85rem;
+  color: #555;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a.edit:hover,
+a.cancel:hover {
+  text-decoration: underline;
+}
+
+.edit-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.edit-form input[type='text'] {
+  flex: 1;
+  padding: 0.4rem;
+  font-size: 1rem;
+}
+
+button.save {
+  background: none;
+  border: 1px solid #2a7f2a;
+  color: #2a7f2a;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+}

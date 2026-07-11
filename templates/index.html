@@ -24,13 +24,22 @@
               {{ '☑' if todo['is_complete'] else '☐' }}
             </button>
           </form>
-          <span class="title">{{ todo['title'] }}</span>
-          {% if todo['due_date'] %}
-            <span class="due-date">{{ todo['due_date'] }}{{ ' (overdue)' if overdue else '' }}</span>
+          {% if editing_id == todo['id'] %}
+            <form action="{{ url_for('edit', todo_id=todo['id']) }}" method="post" class="edit-form">
+              <input type="text" name="title" value="{{ todo['title'] }}" autocomplete="off" required autofocus>
+              <button type="submit" class="save">Save</button>
+              <a href="{{ url_for('index') }}" class="cancel">Cancel</a>
+            </form>
+          {% else %}
+            <span class="title">{{ todo['title'] }}</span>
+            {% if todo['due_date'] %}
+              <span class="due-date">{{ todo['due_date'] }}{{ ' (overdue)' if overdue else '' }}</span>
+            {% endif %}
+            <a href="{{ url_for('edit', todo_id=todo['id']) }}" class="edit">Edit</a>
+            <form action="{{ url_for('delete', todo_id=todo['id']) }}" method="post">
+              <button type="submit" class="delete">Delete</button>
+            </form>
           {% endif %}
-          <form action="{{ url_for('delete', todo_id=todo['id']) }}" method="post">
-            <button type="submit" class="delete">Delete</button>
-          </form>
         </li>
       {% else %}
         <li class="empty">No todos yet — add one above.</li>
