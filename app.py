@@ -1,12 +1,24 @@
+import os
 import sqlite3
 from datetime import date
 from pathlib import Path
+from dotenv import load_dotenv
 
 from flask import Flask, g, redirect, render_template, request, url_for
+
+load_dotenv()
 
 DATABASE = Path(__file__).parent / "todo.db"
 
 app = Flask(__name__)
+
+secret_key = os.getenv("SECRET_KEY")
+
+if not secret_key:
+    raise RuntimeError("Missing required environment variable: SECRET_KEY")
+
+app.config["SECRET_KEY"] = secret_key
+
 
 
 def get_db():
@@ -107,3 +119,4 @@ def delete(todo_id):
 
 if __name__ == "__main__":
     app.run(debug=True)
+
